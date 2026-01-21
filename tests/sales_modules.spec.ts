@@ -129,11 +129,71 @@ test("Create Sales Order (Press)", async ({ page }) => {
   await soPopup.waitForLoadState("domcontentloaded");
 
   // input data in the Box Details
-  await soPopup.locator("input[id='TLN_1_I_DLYDATE']").fill("01/21/2026");
+  await soPopup.locator("#TLN_1_I_DLYDATE_flatpickr_btn").click();
+  await soPopup.getByLabel("January 29,").nth(1).click();
+  await soPopup.locator("#TLN_1_I_DLYDATE").fill("01/29/2026");
   await soPopup.locator("input[id='TLN_2_I_QTY_0']").fill("10");
   await soPopup.locator("input[id='TLN_2_I_QTY_1']").fill("2");
   await soPopup.locator("input[id='TLN_2_I_QTY_2']").fill("12");
 
   await soPopup.getByRole("button", { name: "Save" }).click();
   await expectMsg(soPopup, "info", "Successfully Submitted");
+});
+
+test("Sales Order List (Press)", async ({ page }) => {
+  await login(page);
+  const popup = await navigate(
+    page,
+    "Sale Order (Press)",
+    "Sales Order List (Press)",
+  );
+
+  // await popup.locator(".checkbox_label").first().click();
+  // await popup.getByRole("button", { name: "Cancel" }).click();
+  // await expectMsg(popup, "info", "Cancelled SO Detail Successfully");
+  // await closeMsg(popup);
+
+  await popup.locator(".checkbox_label").first().click();
+  await popup.getByRole("button", { name: "Cancel" }).click();
+  await expectMsg(popup, "error", "SO Detail is already cancelled");
+  await closeMsg(popup);
+
+  await popup.locator(".checkbox_label").first().click();
+  await popup
+    .getByRole("button", { name: "Close SO", exact: true })
+    .first()
+    .click();
+  await expectMsg(popup, "error", "SO Detail is already cancelled");
+  await closeMsg(popup);
+});
+
+
+test('Confirm Delivery Order (Press)', async ({ page }) => {
+  await login(page);
+  const popup = await navigate(
+    page,
+    "Sale Order (Press)",
+    "Confirm Delivery Order (Press)",
+  );
+  
+  // Click Checkbox
+  await popup.locator(".checkbox_label").first().click();
+  await popup
+    .getByRole("button", { name: "Confirm" })
+    .first()
+    .click();
+  await expectMsg(popup, "error", "Delivery Qty does not equal to SO Qty");
+  await closeMsg(popup);
+
+  // Cancel click Checkbox 
+  await popup.locator(".checkbox_label").first().click();
+  
+  await popup.locator('#TLN_2_CHK_6 > tbody > .selectionTableRow > td > .checkbox_label').click();
+  await popup
+    .getByRole("button", { name: "Confirm" })
+    .first()
+    .click();
+  await expectMsg(popup, "error", "Delivery Qty does not equal to SO Qty");
+  await closeMsg(popup);
+
 });
