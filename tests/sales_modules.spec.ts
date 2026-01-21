@@ -32,7 +32,6 @@ async function navigate(page: Page, funcGroup: string, menuItem: string) {
   return popup;
 }
 
-// Message Helpers
 async function expectMsg(page: Page, type: "info" | "error", text: string) {
   const MSGector = type === "info" ? MSG.Info : MSG.Err;
   await expect(page.locator(MSGector, { hasText: text })).toBeVisible();
@@ -45,7 +44,7 @@ async function closeMsg(page: Page) {
     .click();
 }
 
-// Tests
+// run tests
 test("Create Quotation (Press)", async ({ page }) => {
   await login(page);
   const popup = await navigate(
@@ -60,7 +59,6 @@ test("Create Quotation (Press)", async ({ page }) => {
   const custPage = await customerPopup;
   await custPage.locator('input[name="R_ROW:1:j_idt96"]').click(); // Select customer
 
-  // Submit form
   await popup.locator("#TLN_1_I_TYPE").selectOption("0");
   await popup.getByRole("button", { name: "Get FG Details" }).click();
   await popup.getByRole("button", { name: "Submit" }).click();
@@ -105,4 +103,37 @@ test("Quotation List (Press)", async ({ page }) => {
   await popup.getByRole("button", { name: "Unapproved" }).click();
   await expectMsg(popup, "error", "Quotation already unapproved");
   await closeMsg(popup);
+});
+
+test("Create Sales Order (Press)", async ({ page }) => {
+  await login(page);
+  const popup = await navigate(
+    page,
+    "Sale Order (Press)",
+    "Quotation List (Press)",
+  );
+
+  // approve quotation first
+  await popup.locator(".checkbox_label").first().click();
+  await popup
+    .getByRole("button", { name: "Approved", exact: true })
+    .first()
+    .click();
+  await closeMsg(popup);
+
+  // Click Issue Sales Order
+  const soPopupPromise = popup.waitForEvent("popup");
+  await popup.locator('input[name="2_Issue Sales Order_0"]').click();
+  const soPopup = await soPopupPromise;
+
+  await soPopup.waitForLoadState("domcontentloaded");
+
+  // input data in the Box Details
+  await soPopup.locator("input[id='TLN_1_I_DLYDATE']").fill("01/21/2026");
+  await soPopup.locator("input[id='TLN_2_I_QTY_0']").fill("10");
+  await soPopup.locator("input[id='TLN_2_I_QTY_1']").fill("2");
+  await soPopup.locator("input[id='TLN_2_I_QTY_2']").fill("12");
+
+  await soPopup.getByRole("button", { name: "Save" }).click();
+  await expectMsg(soPopup, "info", "Successfully Submitted");
 });
