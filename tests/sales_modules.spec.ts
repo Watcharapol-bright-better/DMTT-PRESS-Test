@@ -5,78 +5,78 @@ test("Create Quotation (Press)", async ({ page }) => {
   let tln = new TalonBase(page);
   await tln.login();
   
-  const popup = await tln.navigate(
+  const Ctx = await tln.navigate(
     "Sale Order (Press)",
     "Create Quotation (Press)",
   );
 
   // Open Customer Subform
-  const custPage = await tln.openPopup(popup, "#TLN_1_I_CSCODE_SUB");
+  const custPage = await tln.openPopup(Ctx, "#TLN_1_I_CSCODE_SUB");
   await custPage.locator('input[name="R_ROW:1:j_idt96"]').click();
 
   // Open Currency Subform
-  const currencyPage = await tln.openPopup(popup, "#TLN_1_I_CURRENCY_SUB");
+  const currencyPage = await tln.openPopup(Ctx, "#TLN_1_I_CURRENCY_SUB");
   await currencyPage.locator('input[name="R_ROW:15:j_idt96"]').click();
 
   // Submit form
-  await popup.locator("#TLN_1_I_TYPE").selectOption("0");
-  await tln.clickButton(popup, "Get FG Details");
-  await tln.clickButton(popup, "Submit");
+  await Ctx.locator("#TLN_1_I_TYPE").selectOption("0");
+  await tln.clickButton(Ctx, "Get FG Details");
+  await tln.clickButton(Ctx, "Submit");
 
-  await tln.expectMsg(popup, "info", "Successfully Submitted");
+  await tln.expectMsg(Ctx, "info", "Successfully Submitted");
 });
 
 test("Quotation List (Press)", async ({ page }) => {
   let tln = new TalonBase(page);
   await tln.login();
   
-  const popup = await tln.navigate(
+  const Ctx = await tln.navigate(
     "Sale Order (Press)",
     "Quotation List (Press)",
   );
 
   // approve - success
-  await tln.selectCheckbox(popup);
-  await tln.clickButton(popup, "Approved", true);
-  await tln.expectMsg(popup, "info", "Quotation Approved Successfully");
-  await tln.closeMsg(popup);
+  await tln.selectCheckbox(Ctx);
+  await tln.clickButton(Ctx, "Approved", true);
+  await tln.expectMsg(Ctx, "info", "Quotation Approved Successfully");
+  await tln.closeMsg(Ctx);
 
   // approve - already approved
-  await tln.selectCheckbox(popup);
-  await tln.clickButton(popup, "Approved", true);
-  await tln.expectMsg(popup, "error", "Quotation already approved");
-  await tln.closeMsg(popup);
+  await tln.selectCheckbox(Ctx);
+  await tln.clickButton(Ctx, "Approved", true);
+  await tln.expectMsg(Ctx, "error", "Quotation already approved");
+  await tln.closeMsg(Ctx);
 
   // unapprove - success
-  await tln.selectCheckbox(popup);
-  await tln.clickButton(popup, "Unapproved");
-  await tln.expectMsg(popup, "info", "Unapproved successfully");
-  await tln.closeMsg(popup);
+  await tln.selectCheckbox(Ctx);
+  await tln.clickButton(Ctx, "Unapproved");
+  await tln.expectMsg(Ctx, "info", "Unapproved successfully");
+  await tln.closeMsg(Ctx);
 
   // unapprove - already unapproved
-  await tln.selectCheckbox(popup);
-  await tln.clickButton(popup, "Unapproved");
-  await tln.expectMsg(popup, "error", "Quotation already unapproved");
-  await tln.closeMsg(popup);
+  await tln.selectCheckbox(Ctx);
+  await tln.clickButton(Ctx, "Unapproved");
+  await tln.expectMsg(Ctx, "error", "Quotation already unapproved");
+  await tln.closeMsg(Ctx);
 });
 
 test("Create Sales Order (Press)", async ({ page }) => {
   let tln = new TalonBase(page);
   await tln.login();
   
-  const popup = await tln.navigate(
+  const Ctx = await tln.navigate(
     "Sale Order (Press)",
     "Quotation List (Press)",
   );
 
   // approve quotation first
-  await tln.selectCheckbox(popup);
-  await tln.clickButton(popup, "Approved", true);
-  await tln.closeMsg(popup);
+  await tln.selectCheckbox(Ctx);
+  await tln.clickButton(Ctx, "Approved", true);
+  await tln.closeMsg(Ctx);
 
   // Click Issue Sales Order
   const soPopup = await tln.openPopup(
-    popup,
+    Ctx,
     'input[name="2_Issue Sales Order_0"]',
   );
 
@@ -96,54 +96,54 @@ test("Sales Order List (Press)", async ({ page }) => {
   let tln = new TalonBase(page);
   await tln.login();
   
-  const popup = await tln.navigate(
+  const Ctx = await tln.navigate(
     "Sale Order (Press)",
     "Sales Order List (Press)",
   );
 
-  await tln.selectCheckbox(popup);
-  await tln.clickButton(popup, "Cancel");
-  await tln.expectMsg(popup, "error", "SO Detail is already cancelled");
-  await tln.closeMsg(popup);
+  await tln.selectCheckbox(Ctx);
+  await tln.clickButton(Ctx, "Cancel");
+  await tln.expectMsg(Ctx, "error", "SO Detail is already cancelled");
+  await tln.closeMsg(Ctx);
 
-  await tln.selectCheckbox(popup);
-  await tln.clickButton(popup, "Close SO", true);
-  await tln.expectMsg(popup, "error", "SO Detail is already cancelled");
-  await tln.closeMsg(popup);
+  await tln.selectCheckbox(Ctx);
+  await tln.clickButton(Ctx, "Close SO", true);
+  await tln.expectMsg(Ctx, "error", "SO Detail is already cancelled");
+  await tln.closeMsg(Ctx);
 });
 
 test("Confirm Delivery Order (Press)", async ({ page }) => {
   let tln = new TalonBase(page);
   await tln.login();
   
-  const popup = await tln.navigate(
+  const Ctx = await tln.navigate(
     "Sale Order (Press)",
     "Confirm Delivery Order (Press)",
   );
 
   // Click Checkbox
-  await tln.selectCheckbox(popup);
-  await tln.clickButton(popup, "Confirm");
+  await tln.selectCheckbox(Ctx);
+  await tln.clickButton(Ctx, "Confirm");
   await tln.expectMsg(
-    popup,
+    Ctx,
     "error",
     "Delivery Qty does not equal to SO Qty",
   );
-  await tln.closeMsg(popup);
+  await tln.closeMsg(Ctx);
 
   // Cancel click Checkbox
-  await tln.selectCheckbox(popup);
+  await tln.selectCheckbox(Ctx);
 
-  await popup
+  await Ctx
     .locator(
       "#TLN_2_CHK_6 > tbody > .selectionTableRow > td > .checkbox_label",
     )
     .click();
-  await tln.clickButton(popup, "Confirm");
+  await tln.clickButton(Ctx, "Confirm");
   await tln.expectMsg(
-    popup,
+    Ctx,
     "error",
     "Delivery Qty does not equal to SO Qty",
   );
-  await tln.closeMsg(popup);
+  await tln.closeMsg(Ctx);
 });

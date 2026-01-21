@@ -24,7 +24,7 @@ export class TalonBase {
   }
 
   // Navigation
-  async navigate(funcGroup: string, menuItem: string) {
+  async navigate(funcGroup: string, menuItem: string) : Promise<Page> {
     await this.page.locator("a").filter({ hasText: funcGroup }).click();
     const popupPromise = this.page.waitForEvent("popup");
     await this.page.locator("a").filter({ hasText: menuItem }).click();
@@ -34,7 +34,7 @@ export class TalonBase {
   }
 
   // Popup new screen 
-  async openPopup(parentPage: Page, selector: string) {
+  async openPopup(parentPage: Page, selector: string) : Promise<Page> {
     const popupPromise = parentPage.waitForEvent("popup");
     await parentPage.locator(selector).click();
     const popup = await popupPromise;
