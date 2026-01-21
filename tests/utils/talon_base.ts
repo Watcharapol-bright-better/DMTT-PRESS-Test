@@ -24,7 +24,7 @@ export class TalonBase {
   }
 
   // Navigation
-  async navigate(funcGroup: string, menuItem: string) : Promise<Page> {
+  async navigate(funcGroup: string | RegExp, menuItem: string | RegExp): Promise<Page> {
     await this.page.locator("a").filter({ hasText: funcGroup }).click();
     const popupPromise = this.page.waitForEvent("popup");
     await this.page.locator("a").filter({ hasText: menuItem }).click();
@@ -32,6 +32,7 @@ export class TalonBase {
     await popup.waitForLoadState("domcontentloaded");
     return popup;
   }
+
 
   // Popup new screen 
   async openPopup(parentPage: Page, selector: string) : Promise<Page> {
@@ -68,4 +69,5 @@ export class TalonBase {
       await page.getByRole("button", { name: buttonName }).click();
     }
   }
+
 }
