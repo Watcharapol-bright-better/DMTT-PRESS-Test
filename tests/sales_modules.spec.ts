@@ -76,13 +76,31 @@ test("Quotation List (Press)", async ({ page }) => {
     "Quotation List (Press)",
   );
 
-  // First unapprove - success
+  // approve - success
+  await popup.locator(".checkbox_label").first().click();
+  await popup
+    .getByRole("button", { name: "Approved", exact: true })
+    .first()
+    .click();
+  await expectMsg(popup, "info", "Quotation Approved Successfully");
+  await closeMsg(popup);
+
+  // approve - already approved
+  await popup.locator(".checkbox_label").first().click();
+  await popup
+    .getByRole("button", { name: "Approved", exact: true })
+    .first()
+    .click();
+  await expectMsg(popup, "error", "Quotation already approved");
+  await closeMsg(popup);
+
+  // unapprove - success
   await popup.locator(".checkbox_label").first().click();
   await popup.getByRole("button", { name: "Unapproved" }).click();
   await expectMsg(popup, "info", "Unapproved successfully");
   await closeMsg(popup);
 
-  // Second unapprove - already unapproved
+  // unapprove - already unapproved
   await popup.locator(".checkbox_label").first().click();
   await popup.getByRole("button", { name: "Unapproved" }).click();
   await expectMsg(popup, "error", "Quotation already unapproved");
