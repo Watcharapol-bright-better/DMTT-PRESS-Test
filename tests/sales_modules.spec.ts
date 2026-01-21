@@ -53,18 +53,28 @@ test("Create Quotation (Press)", async ({ page }) => {
     "Create Quotation (Press)",
   );
 
-  // Open Subform
+  // Open Customer Subform
   const customerPopup = popup.waitForEvent("popup");
   await popup.locator("#TLN_1_I_CSCODE_SUB").click();
   const custPage = await customerPopup;
+  await custPage.waitForLoadState("domcontentloaded");
   await custPage.locator('input[name="R_ROW:1:j_idt96"]').click(); // Select customer
+  
+  // Open Currency Subform 
+  const currencyPopup = popup.waitForEvent("popup");
+  await popup.locator('#TLN_1_I_CURRENCY_SUB').click();
+  const currencyPage = await currencyPopup;
+  await currencyPage.waitForLoadState("domcontentloaded");
+  await currencyPage.locator('input[name="R_ROW:15:j_idt96"]').click(); // Select currency code
 
+  // Submit form
   await popup.locator("#TLN_1_I_TYPE").selectOption("0");
   await popup.getByRole("button", { name: "Get FG Details" }).click();
   await popup.getByRole("button", { name: "Submit" }).click();
 
   await expectMsg(popup, "info", "Successfully Submitted");
 });
+
 
 test("Quotation List (Press)", async ({ page }) => {
   await login(page);
