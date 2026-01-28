@@ -75,21 +75,21 @@ test("Create Sales Order (Press)", async ({ page }) => {
   await tln.closeMsg(Ctx);
 
   // Click Issue Sales Order
-  const soPopup = await tln.openPopup(
+  const Ctx2 = await tln.openPopup(
     Ctx,
     'input[name="2_Issue Sales Order_0"]',
   );
 
   // input data in the Box Details
-  await soPopup.locator("#TLN_1_I_DLYDATE_flatpickr_btn").click();
-  await soPopup.getByLabel("January 29,").nth(1).click();
-  await soPopup.locator("#TLN_1_I_DLYDATE").fill("01/29/2026");
-  await soPopup.locator("input[id='TLN_2_I_QTY_0']").fill("10");
-  await soPopup.locator("input[id='TLN_2_I_QTY_1']").fill("2");
-  await soPopup.locator("input[id='TLN_2_I_QTY_2']").fill("12");
+  await Ctx2.locator("#TLN_1_I_DLYDATE_flatpickr_btn").click();
+  await Ctx2.getByLabel("January 29,").nth(1).click();
+  await Ctx2.locator("#TLN_1_I_DLYDATE").fill("01/29/2026");
+  await Ctx2.locator("input[id='TLN_2_I_QTY_0']").fill("10");
+  await Ctx2.locator("input[id='TLN_2_I_QTY_1']").fill("2");
+  await Ctx2.locator("input[id='TLN_2_I_QTY_2']").fill("12");
 
-  await tln.clickButton(soPopup, "Save");
-  await tln.expectMsg(soPopup, "info", "Successfully Submitted");
+  await tln.clickButton(Ctx2, "Save");
+  await tln.expectMsg(Ctx2, "info", "Successfully Submitted");
 });
 
 test("Sales Order List (Press)", async ({ page }) => {

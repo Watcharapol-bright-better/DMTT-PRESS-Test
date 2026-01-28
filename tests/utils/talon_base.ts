@@ -3,8 +3,8 @@ import { expect, Page } from "@playwright/test";
 // Config
 export const CONFIG = {
   url: "https://sandbox-dev-talon.bright-better.com/Talon/",
-  user: "demo4",
-  pass: "25004",
+  user: "demo",
+  pass: "test123",
 };
 
 const MSG = {
