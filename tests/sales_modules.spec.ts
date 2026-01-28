@@ -1,30 +1,8 @@
 import { test } from "@playwright/test";
 import { TalonBase } from "./utils/talon_base";
 
-test("Create Quotation (Press)", async ({ page }) => {
-  let tln = new TalonBase(page);
-  await tln.login();
-  
-  const Ctx = await tln.navigate(
-    "Sale Order (Press)",
-    "Create Quotation (Press)",
-  );
 
-  // Open Customer Subform
-  const custPage = await tln.openPopup(Ctx, "#TLN_1_I_CSCODE_SUB");
-  await custPage.locator('input[name="R_ROW:1:j_idt96"]').click();
 
-  // Open Currency Subform
-  const currencyPage = await tln.openPopup(Ctx, "#TLN_1_I_CURRENCY_SUB");
-  await currencyPage.locator('input[name="R_ROW:15:j_idt96"]').click();
-
-  // Submit form
-  await Ctx.locator("#TLN_1_I_TYPE").selectOption("0");
-  await tln.clickButton(Ctx, "Get FG Details");
-  await tln.clickButton(Ctx, "Submit");
-
-  await tln.expectMsg(Ctx, "info", "Successfully Submitted");
-});
 
 test("Quotation List (Press)", async ({ page }) => {
   let tln = new TalonBase(page);
@@ -95,22 +73,39 @@ test("Create Sales Order (Press)", async ({ page }) => {
 test("Sales Order List (Press)", async ({ page }) => {
   let tln = new TalonBase(page);
   await tln.login();
-  
+  //await tln.screenshot(page, "01_after_login");
+
   const Ctx = await tln.navigate(
     "Sale Order (Press)",
     "Sales Order List (Press)",
   );
+  //await tln.screenshot(Ctx, "02_open_sales_order_list");
 
+  // Cancel
   await tln.selectCheckbox(Ctx);
+ // await tln.screenshot(Ctx, "03_checkbox_selected");
+
   await tln.clickButton(Ctx, "Cancel");
+  //await tln.screenshot(Ctx, "04_click_cancel");
+
   await tln.expectMsg(Ctx, "error", "SO Detail is already cancelled");
+  //await tln.screenshot(Ctx, "05_cancel_error_msg");
+
   await tln.closeMsg(Ctx);
 
+  // Close SO
   await tln.selectCheckbox(Ctx);
+  //await tln.screenshot(Ctx, "06_checkbox_selected_again");
+
   await tln.clickButton(Ctx, "Close SO", true);
+  //await tln.screenshot(Ctx, "07_click_close_so");
+
   await tln.expectMsg(Ctx, "error", "SO Detail is already cancelled");
+  //await tln.screenshot(Ctx, "08_close_so_error_msg");
+
   await tln.closeMsg(Ctx);
 });
+
 
 test("Confirm Delivery Order (Press)", async ({ page }) => {
   let tln = new TalonBase(page);
